@@ -61,6 +61,17 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
 
 }
 
+const afficherTicks = (ticks) => {
+    ticks.forEach(ticke => {
+        console.log(
+            `Ticket #${ticke.id}
+             Passager: ${ticke.passengerName}
+             Trajet: ${ticke.tripId}
+             Place: ${ticke.seatNumber}
+             Prix: ${ticke.price}`
+        )
+    })
+}
 
 const afficherTableau = () => {
     let choises;
@@ -74,7 +85,7 @@ const afficherTableau = () => {
         console.log("5- Rechercher un ticket: ");
         console.log("6- Filtrer les trajets: ");
         console.log("7- Trier les trajets: ");
-        console.log("0- Quitter: ");
+        console.log("0- Quitter");
 
         choises = parseInt(prompt("****Enter number choises: "));
 
@@ -88,7 +99,7 @@ const afficherTableau = () => {
                 count = acheterTicks(tickets, nom, indeTrajet, count);
                 break;
             case 3:
-                console.log(tickets);
+                afficherTicks(tickets);
                 break;
             case 4:
                 console.log("4- Annuler un ticket: ");
@@ -100,6 +111,9 @@ const afficherTableau = () => {
                 break;
             case 7:
                 console.log("7- Trier les trajets: ");
+                break;
+            case 0:
+                console.log("quetter: ");
                 break;
             default:
                 console.log(`****Number ${choises} n'existe pas****`)

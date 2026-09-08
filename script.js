@@ -4,7 +4,7 @@ const prompt = PromptSync();
 
 let tickets = [];
 let count = 0;
-  let newId = 0;
+let newId = 0;
 
 const afficherTrajects = (datas) => {
        datas.forEach(data => {
@@ -16,7 +16,7 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
     let checkTrajet = false;
     let checkSetPlace = false;
     let trajet;
-    let countPlace;;
+    let countSeat = 1;
   
     newId++;
     
@@ -27,9 +27,6 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
                 checkSetPlace = true;
                 trajet = trips[i];
                 trajet.availableSeats--;
-                for (let j = 0; j < trajet.availableSeats.length; j++) {
-                    countPlace += j;
-                }
             }
         }
     }
@@ -39,11 +36,17 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
         if (checkSetPlace == true) {
             console.log(`***créer un ticket ${count + 1}***`);
 
+            for (let i = 0; i < tickets.length; i++) {
+                if (tickets[i].tripId === `${trajet.departure} -----> ${trajet.destination}`) {
+                    countSeat++;
+                }
+            }
+
         tickets.push({
             id: newId,
             passengerName: nom,
             tripId: `${trajet.departure} -----> ${trajet.destination}`,
-            seatNumber: countPlace ,
+            seatNumber: countSeat,
             price: trajet.price,
         });
         count++;

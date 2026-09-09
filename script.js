@@ -123,7 +123,23 @@ const filtrerTraject = (trajet, depart) => {
     }
 }
 
+const triTrajet = (trajet) => {
+    for (let i = 0; i < trajet.length; i++) {
+        for (let j = i + 1; j < trajet.length; j++) {
+            if (trajet[i].price > trajet[j].price) {
+                let swap = trajet[j];
+                trajet[j] = trajet[i];
+                trajet[i] = swap;
+            }
+        }
+    }
 
+    trajet.forEach(traj => {
+        console.log(` 
+                ${traj.departure} ----> ${traj.destination}: ${traj.price} DH
+        `)
+    })
+}
 const afficherTableau = () => {
     let choises;
     do {
@@ -165,7 +181,7 @@ const afficherTableau = () => {
                 filtrerTraject(trips, depart);
                 break;
             case 7:
-                console.log("7- Trier les trajets: ");
+                triTrajet(trips);
                 break;
             case 0:
                 console.log("quetter");

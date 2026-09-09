@@ -84,7 +84,7 @@ const annulerTicket = (tickets, indeTicket, count) => {
             tickets.splice(i, 1);
 
             if (trip) {
-                trips[i].availableSeats++;
+                trip.availableSeats++;
             }
 
             console.log("Ticket annulé avec succès.");
@@ -97,6 +97,32 @@ const annulerTicket = (tickets, indeTicket, count) => {
     console.log("Ticket introuvable.");
     return count;
 }
+
+const rechercherTicket = (tickets, rechercherTicket) => {
+    for (let i = 0; i < tickets.length; i++) {
+        if (tickets[i].passengerName.toLowerCase() === rechercherTicket.toLowerCase()) {
+            const voyage = trips.find(trip => trip.id === tickets[i].tripId);
+            console.log(`
+             Ticket #${tickets[i].id}
+             Passager: ${tickets[i].passengerName}
+             Trajet: ${voyage.departure} ----> ${voyage.destination},
+             Place: ${tickets[i].seatNumber}
+             Prix: ${tickets[i].price}
+                `);
+        }
+    }
+}
+
+const filtrerTraject = (trajet, depart) => {
+    for (let i = 0; i < trajet.length; i++) {
+        if (trajet[i].departure.toLowerCase() === depart.toLowerCase()) {
+            console.log(` 
+                ${trajet[i].departure} ----> ${trajet[i].destination}: ${trajet[i].price} DH
+                `)
+        }
+    }
+}
+
 
 const afficherTableau = () => {
     let choises;
@@ -131,15 +157,18 @@ const afficherTableau = () => {
                 count = annulerTicket(tickets, indeTicket, count);
                 break;
             case 5:
+                const rechercherTicketByName = prompt("Rechercher un ticket nom passage: ");
+                rechercherTicket(tickets, rechercherTicketByName);
                 break;
             case 6:
-                console.log("6- Filtrer les trajets: ");
+                const depart = prompt("Enter Ville de départ: ");
+                filtrerTraject(trips, depart);
                 break;
             case 7:
                 console.log("7- Trier les trajets: ");
                 break;
             case 0:
-                console.log("quetter: ");
+                console.log("quetter");
                 break;
             default:
                 console.log(`****Number ${choises} n'existe pas****`)

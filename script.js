@@ -73,6 +73,21 @@ const afficherTicks = (ticks) => {
     })
 }
 
+const annulerTicket = (tickets, indeTicket, count) => {
+    for (let i = 0; i < tickets.length; i++) {
+        if (tickets[i].id == indeTicket) {
+            for (let j = 0; i < trips.length; j++) {
+                if (tickets[i].tripId == trips[i].departure && trips[i].destination) {
+                    tickets.splice(i, 1);
+                    console.log("Ticket annulé avec succès.");
+                }
+            }
+        }
+    }
+count--;
+return count;
+}
+
 const afficherTableau = () => {
     let choises;
     do {
@@ -102,7 +117,8 @@ const afficherTableau = () => {
                 afficherTicks(tickets);
                 break;
             case 4:
-                console.log("4- Annuler un ticket: ");
+                const indeTicket = parseInt(prompt("Identifiant du ticket : "));
+                count = annulerTicket(tickets, indeTicket, count);
                 break;
             case 5:
                 break;

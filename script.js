@@ -12,13 +12,13 @@ const afficherTrajects = (datas) => {
        });
 }
 
+
 const acheterTicks = (tickets, nom, indeTrajet, count) => {
     let checkTrajet = false;
     let checkSetPlace = false;
     let trajet;
     let countSeat = 1;
   
-    newId++;
     
     for (let i = 0; i < trips.length; i++) {
         if (trips[i].id == indeTrajet) {
@@ -27,6 +27,7 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
                 checkSetPlace = true;
                 trajet = trips[i];
                 trajet.availableSeats--;
+                newId++;
             }
         }
     }
@@ -37,7 +38,7 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
             console.log(`***créer un ticket ${count + 1}***`);
 
             for (let i = 0; i < tickets.length; i++) {
-                if (tickets[i].tripId === `${trajet.departure} -----> ${trajet.destination}`) {
+                if (tickets[i].tripId === trajet.id) {
                     countSeat++;
                 }
             }
@@ -45,7 +46,7 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
         tickets.push({
             id: newId,
             passengerName: nom,
-            tripId: `${trajet.departure} -----> ${trajet.destination}`,
+            tripId: trajet.id,
             seatNumber: countSeat,
             price: trajet.price,
         });
@@ -61,12 +62,14 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
 
 }
 
+
 const afficherTicks = (ticks) => {
     ticks.forEach(ticke => {
+        const voyage = trips.find(trip => trip.id === ticke.tripId);
         console.log(
             `Ticket #${ticke.id}
              Passager: ${ticke.passengerName}
-             Trajet: ${ticke.tripId}
+             Trajet: ${voyage.departure} ----> ${voyage.destination},
              Place: ${ticke.seatNumber}
              Prix: ${ticke.price}`
         )
@@ -75,17 +78,24 @@ const afficherTicks = (ticks) => {
 
 const annulerTicket = (tickets, indeTicket, count) => {
     for (let i = 0; i < tickets.length; i++) {
-        if (tickets[i].id == indeTicket) {
-            for (let j = 0; i < trips.length; j++) {
-                if (tickets[i].tripId == trips[i].departure && trips[i].destination) {
-                    tickets.splice(i, 1);
-                    console.log("Ticket annulé avec succès.");
-                }
+        if (tickets[i].id === indeTicket) {
+
+            const trip = trips.find(trip => trip.id === tickets[i].tripId);
+            tickets.splice(i, 1);
+
+            if (trip) {
+                trips[i].availableSeats++;
             }
+
+            console.log("Ticket annulé avec succès.");
+            
+            count--
+            return count
         }
     }
-count--;
-return count;
+
+    console.log("Ticket introuvable.");
+    return count;
 }
 
 const afficherTableau = () => {

@@ -3,6 +3,7 @@ import PromptSync from "prompt-sync";
 const prompt = PromptSync();
 
 let tickets = [];
+let ticketDelet = [];
 let count = 0;
 let newId = 0;
 
@@ -13,7 +14,7 @@ const afficherTrajects = (datas) => {
                 #${data.id} ${data.departure} ---> ${data.destination}
                 Départ: ${data.departureTime}
                 Arrivée: ${data.arrivalTime}
-                Price: ${data.price}
+                Price: ${data.price}DH
                 Places disponibles : ${data.availableSeats}
                 `);
        });
@@ -25,9 +26,23 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
     let checkSetPlace = false;
     let trajet;
     let countSeat = 1;
-  
-    
-    for (let i = 0; i < trips.length; i++) {
+    let trouve = -1 ;
+    for (let i = 0; i < ticketDelet.length; i++){
+        if (ticketDelet[i].tripId === indeTrajet) {
+            trouve = i;
+        }
+    }
+    if (trouve != -1) {
+        newId++;
+        let ticket = ticketDelet[trouve];
+
+        ticket.passengerName = nom;
+        ticket.id = newId
+        
+        trips[indeTrajet - 1].availableSeats--;
+        tickets.push(ticket);
+    }
+    else{for (let i = 0; i < trips.length; i++) {
         if (trips[i].id == indeTrajet) {
                 checkTrajet = true;
             if (trips[i].availableSeats > 0) {
@@ -64,7 +79,7 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
     } else {
         console.log("trajet non pas disponcible!")
     }
-
+}
     return count;
 
 }
@@ -79,7 +94,7 @@ const afficherTicks = (ticks) => {
              Passager: ${ticke.passengerName}
              Trajet: ${voyage.departure} ----> ${voyage.destination},
              Place: ${ticke.seatNumber}
-             Prix: ${ticke.price}`
+             Prix: ${ticke.price}DH`
         )
     })
 }
@@ -89,6 +104,7 @@ const annulerTicket = (tickets, indeTicket, count) => {
         if (tickets[i].id === indeTicket) {
 
             const trip = trips.find(trip => trip.id === tickets[i].tripId);
+            ticketDelet.push(tickets[i]);
             tickets.splice(i, 1);
 
             if (trip) {
@@ -115,7 +131,7 @@ const rechercherTicket = (tickets, rechercherTicket) => {
              Passager: ${tickets[i].passengerName}
              Trajet: ${voyage.departure} ----> ${voyage.destination},
              Place: ${tickets[i].seatNumber}
-             Prix: ${tickets[i].price}
+             Prix: ${tickets[i].price}DH
                 `);
         }
     }
@@ -184,6 +200,26 @@ const trajetVendu = (tickets) => {
                  ${tripfind.departure} --> ${tripfind.destination}
                  ${max} tickets vendus`);
 }
+
+const treeTopTrajet = (tickets) => {
+    let top3 = [];
+    for (let i = 0; i < tickets.length; i++) {
+        for (let j = i + 1; j < tickets.length; j++) {
+            if (tickets[i].seatNumber > tickets[j].seatNumber) {
+                let swap = tickets[j];
+                tickets[j] = tickets[i];
+                tickets[i] = swap;
+            }
+        }
+    }
+
+    for (let i = tickets.length; i < 2; i++) {
+        console.log(`
+                    ${tickets[i].departure} ---> ${tickets[i].destination}
+                     `)
+    }
+}
+
 const afficherTableau = () => {
     let choises;
     do {
@@ -234,6 +270,7 @@ const afficherTableau = () => {
                  console.log("1- Afficher total ticket");
                  console.log("2- Chiffre d'affaires total");
                  console.log("3- Trajet le plus vendu");
+                 console.log("4- Trajet le plus vendu");
                  console.log("0- quetter");
 
                  choises2 = parseInt(prompt("***Enter number choises: "));
@@ -247,6 +284,9 @@ const afficherTableau = () => {
                         break;
                     case 3:
                         trajetVendu(tickets);
+                        break;
+                    case 4:
+                        treeTopTrajet(tickets);
                         break;
                     case 0:
                         console.log("Quetter");

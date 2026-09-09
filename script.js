@@ -8,7 +8,14 @@ let newId = 0;
 
 const afficherTrajects = (datas) => {
        datas.forEach(data => {
-            console.log(data);
+            console.log("=== TRAJETS DISPONIBLES ===")
+            console.log(`
+                #${data.id} ${data.departure} ---> ${data.destination}
+                Départ: ${data.departureTime}
+                Arrivée: ${data.arrivalTime}
+                Price: ${data.price}
+                Places disponibles : ${data.availableSeats}
+                `);
        });
 }
 
@@ -66,6 +73,7 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
 const afficherTicks = (ticks) => {
     ticks.forEach(ticke => {
         const voyage = trips.find(trip => trip.id === ticke.tripId);
+        console.log("=== TICKETS ===");
         console.log(
             `Ticket #${ticke.id}
              Passager: ${ticke.passengerName}
@@ -111,6 +119,8 @@ const rechercherTicket = (tickets, rechercherTicket) => {
                 `);
         }
     }
+
+    console.log("Ticket introuvable.");
 }
 
 const filtrerTraject = (trajet, depart) => {
@@ -121,6 +131,7 @@ const filtrerTraject = (trajet, depart) => {
                 `)
         }
     }
+    console.log("trajet introuvable.");
 }
 
 const triTrajet = (trajet) => {
@@ -140,18 +151,52 @@ const triTrajet = (trajet) => {
         `)
     })
 }
+
+const ticketsTotal = (tickets) => {
+    let total = 0;
+     for (let i = 0; i < tickets.length; i++) {
+        total++
+     }
+
+     return total;
+}
+
+const chifferDaffaire = (tickets) => {
+    let somme = 0;
+      for (let i = 0; i < tickets.length; i++) {
+        somme += tickets[i].price;
+     }
+
+     return somme;
+}
+
+const trajetVendu = (tickets) => {
+    let max = 0;
+    let tripId = "";
+        for (let i = 0; i < tickets.length; i++) {
+            if (tickets[i].seatNumber > max) {
+                max = tickets[i].seatNumber;
+                tripId = tickets[i].tripId;
+            }
+        }
+    let tripfind = trips.find(trip => trip.id === tripId);
+    console.log(`***Trajet le plus vendu : 
+                 ${tripfind.departure} --> ${tripfind.destination}
+                 ${max} tickets vendus`);
+}
 const afficherTableau = () => {
     let choises;
     do {
         console.log("\n*****  RAILWAY MANAGER *****\n");
 
-        console.log("1- Afficher les trajets: ");
-        console.log("2- Acheter un ticket: ");
-        console.log("3- Afficher les tickets: ");
-        console.log("4- Annuler un ticket: ");
-        console.log("5- Rechercher un ticket: ");
-        console.log("6- Filtrer les trajets: ");
-        console.log("7- Trier les trajets: ");
+        console.log("1- Afficher les trajets");
+        console.log("2- Acheter un ticket");
+        console.log("3- Afficher les tickets");
+        console.log("4- Annuler un ticket");
+        console.log("5- Rechercher un ticket");
+        console.log("6- Filtrer les trajets");
+        console.log("7- Trier les trajets");
+        console.log("8- Bonus — Statistiques")
         console.log("0- Quitter");
 
         choises = parseInt(prompt("****Enter number choises: "));
@@ -183,11 +228,42 @@ const afficherTableau = () => {
             case 7:
                 triTrajet(trips);
                 break;
+            case 8:
+                let choises2;
+                do {
+                 console.log("1- Afficher total ticket");
+                 console.log("2- Chiffre d'affaires total");
+                 console.log("3- Trajet le plus vendu");
+                 console.log("0- quetter");
+
+                 choises2 = parseInt(prompt("***Enter number choises: "));
+
+                 switch (choises2) {
+                    case 1:
+                        console.log(ticketsTotal(tickets));
+                        break;
+                    case 2:
+                        console.log(`${chifferDaffaire(tickets)}DH`);
+                        break;
+                    case 3:
+                        trajetVendu(tickets);
+                        break;
+                    case 0:
+                        console.log("Quetter");
+                        break;
+                    default:
+                        console.log(`****Number ${choises2} n'existe pas****`)
+                        break;
+                 }
+                } while (choises2 !== 0);
+
+                break;
             case 0:
                 console.log("quetter");
                 break;
             default:
                 console.log(`****Number ${choises} n'existe pas****`)
+                break;
         }
     } while (choises !== 0);
 }

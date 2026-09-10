@@ -1,11 +1,25 @@
 import {trips} from "./data.js";
+import { tickets } from "./data.js";
 import PromptSync from "prompt-sync";
 const prompt = PromptSync();
 
-let tickets = [];
 let ticketDelet = [];
 let count = 0;
-let newId = 0;
+let newId = tickets.length;
+
+for (let i = 0; i < tickets.length; i++) {
+    let treject = null;
+
+    for (let j = 0; j < trips.length; j++) {
+        if (tickets[i].tripId === trips[j].id) {
+            treject = trips[j];
+        }
+    }
+
+    if (treject !== null) {
+        treject.availableSeats--;
+    }
+}
 
 const afficherTrajects = (datas) => {
        datas.forEach(data => {
@@ -20,13 +34,12 @@ const afficherTrajects = (datas) => {
        });
 }
 
-
 const acheterTicks = (tickets, nom, indeTrajet, count) => {
     let checkTrajet = false;
     let checkSetPlace = false;
     let trajet;
-    let countSeat = 1;
     let trouve = -1 ;
+    let countSeat = 1;
     for (let i = 0; i < ticketDelet.length; i++){
         if (ticketDelet[i].tripId === indeTrajet) {
             trouve = i;
@@ -41,8 +54,11 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
         
         trips[indeTrajet - 1].availableSeats--;
         tickets.push(ticket);
+        ticketDelet.splice(trouve, 1);
     }
-    else{for (let i = 0; i < trips.length; i++) {
+    else{
+        
+        for (let i = 0; i < trips.length; i++) {
         if (trips[i].id == indeTrajet) {
                 checkTrajet = true;
             if (trips[i].availableSeats > 0) {
@@ -58,20 +74,28 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
     if (checkTrajet == true) {
         if (checkSetPlace == true) {
             console.log(`***créer un ticket ${count + 1}***`);
-
+            
             for (let i = 0; i < tickets.length; i++) {
                 if (tickets[i].tripId === trajet.id) {
                     countSeat++;
+                    
                 }
             }
-
-        tickets.push({
+ 
+    let ticketa = {
             id: newId,
             passengerName: nom,
             tripId: trajet.id,
             seatNumber: countSeat,
             price: trajet.price,
-        });
+        };
+
+        tickets.push(ticketa);
+        console.log(`Ticket #${ticketa.id}
+                     Passager: ${ticketa.passengerName}
+                     Trajet: ${trajet.departure} ---> ${trajet.destination}
+                     Place: ${ticketa.seatNumber}
+                     Prix: ${ticketa.price}`)
         count++;
         } else {
             console.log("Place non pas disponcible!")
@@ -80,6 +104,8 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
         console.log("trajet non pas disponcible!")
     }
 }
+
+    
     return count;
 
 }
@@ -100,9 +126,10 @@ const afficherTicks = (ticks) => {
 }
 
 const annulerTicket = (tickets, indeTicket, count) => {
+    let check = false;
     for (let i = 0; i < tickets.length; i++) {
         if (tickets[i].id === indeTicket) {
-
+            check = true;
             const trip = trips.find(trip => trip.id === tickets[i].tripId);
             ticketDelet.push(tickets[i]);
             tickets.splice(i, 1);
@@ -118,13 +145,17 @@ const annulerTicket = (tickets, indeTicket, count) => {
         }
     }
 
-    console.log("Ticket introuvable.");
+    if (check === false) {
+        console.log("Ticket introuvable!!!!!");
+    }
     return count;
 }
 
 const rechercherTicket = (tickets, rechercherTicket) => {
+    let check = false;
     for (let i = 0; i < tickets.length; i++) {
-        if (tickets[i].passengerName.toLowerCase() === rechercherTicket.toLowerCase()) {
+        if (tickets[i].passengerName.toLowerCase() === rechercherTicket.toLowerCase().trim()) {
+            check = true;
             const voyage = trips.find(trip => trip.id === tickets[i].tripId);
             console.log(`
              Ticket #${tickets[i].id}
@@ -136,32 +167,40 @@ const rechercherTicket = (tickets, rechercherTicket) => {
         }
     }
 
-    console.log("Ticket introuvable.");
+    if (check === false) {
+        console.log("Ticket introuvable!!!!!!!");
+    }
 }
 
 const filtrerTraject = (trajet, depart) => {
+    let check = false;
     for (let i = 0; i < trajet.length; i++) {
         if (trajet[i].departure.toLowerCase() === depart.toLowerCase()) {
+            check = true;
             console.log(` 
                 ${trajet[i].departure} ----> ${trajet[i].destination}: ${trajet[i].price} DH
                 `)
         }
     }
-    console.log("trajet introuvable.");
+    
+    if (check === false) {
+        console.log("trajet introuvable!!!!!");
+    }
 }
 
 const triTrajet = (trajet) => {
-    for (let i = 0; i < trajet.length; i++) {
-        for (let j = i + 1; j < trajet.length; j++) {
-            if (trajet[i].price > trajet[j].price) {
-                let swap = trajet[j];
-                trajet[j] = trajet[i];
-                trajet[i] = swap;
+    let triTraj = [...trajet];
+    for (let i = 0; i < triTraj.length; i++) {
+        for (let j = i + 1; j < triTraj.length; j++) {
+            if (triTraj[i].price > triTraj[j].price) {
+                let swap = triTraj[j];
+                triTraj[j] = triTraj[i];
+                triTraj[i] = swap;
             }
         }
     }
-
-    trajet.forEach(traj => {
+    
+    triTraj.forEach(traj => {
         console.log(` 
                 ${traj.departure} ----> ${traj.destination}: ${traj.price} DH
         `)
@@ -201,24 +240,6 @@ const trajetVendu = (tickets) => {
                  ${max} tickets vendus`);
 }
 
-const treeTopTrajet = (tickets) => {
-    let top3 = [];
-    for (let i = 0; i < tickets.length; i++) {
-        for (let j = i + 1; j < tickets.length; j++) {
-            if (tickets[i].seatNumber > tickets[j].seatNumber) {
-                let swap = tickets[j];
-                tickets[j] = tickets[i];
-                tickets[i] = swap;
-            }
-        }
-    }
-
-    for (let i = tickets.length; i < 2; i++) {
-        console.log(`
-                    ${tickets[i].departure} ---> ${tickets[i].destination}
-                     `)
-    }
-}
 
 const afficherTableau = () => {
     let choises;
@@ -234,6 +255,8 @@ const afficherTableau = () => {
         console.log("7- Trier les trajets");
         console.log("8- Bonus — Statistiques")
         console.log("0- Quitter");
+        console.log("")
+        console.log("**************************************")
 
         choises = parseInt(prompt("****Enter number choises: "));
 
@@ -309,3 +332,8 @@ const afficherTableau = () => {
 }
 
 afficherTableau();
+
+
+
+
+

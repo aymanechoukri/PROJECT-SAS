@@ -181,3 +181,53 @@
     }
 ];
 
+
+export const tickets = [
+  {
+    id: 1,
+    passengerName: "Ahmed",
+    tripId: 1,
+    seatNumber: 1,
+    price: 50
+  },
+
+  {
+    id: 2,
+    passengerName: "Amin",
+    tripId: 1,
+    seatNumber: 2,
+    price: 50
+  },
+
+  {
+    id: 3,
+    passengerName: "Aziz",
+    tripId: 1,
+    seatNumber: 3,
+    price: 50
+  },
+
+  {
+    id: 4,
+    passengerName: "adil",
+    tripId: 2,
+    seatNumber: 1,
+    price: 90
+  },
+
+  {
+    id: 5,
+    passengerName: "aymane",
+    tripId: 2,
+    seatNumber: 2,
+    price: 90
+  },
+
+  {
+    id: 6,
+    passengerName: "aya",
+    tripId: 3,
+    seatNumber: 1,
+    price: 50
+  },
+]

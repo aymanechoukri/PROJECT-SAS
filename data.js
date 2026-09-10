@@ -231,3 +231,6 @@ export const tickets = [
     price: 50
   },
 ]
+
+
+

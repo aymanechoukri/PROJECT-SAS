@@ -40,6 +40,7 @@ const acheterTicks = (tickets, nom, indeTrajet, count) => {
     let trajet;
     let trouve = -1 ;
     let countSeat = 1;
+
     for (let i = 0; i < ticketDelet.length; i++){
         if (ticketDelet[i].tripId === indeTrajet) {
             trouve = i;
@@ -293,7 +294,6 @@ const afficherTableau = () => {
                  console.log("1- Afficher total ticket");
                  console.log("2- Chiffre d'affaires total");
                  console.log("3- Trajet le plus vendu");
-                 console.log("4- Trajet le plus vendu");
                  console.log("0- quetter");
 
                  choises2 = parseInt(prompt("***Enter number choises: "));
